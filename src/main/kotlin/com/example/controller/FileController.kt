@@ -17,7 +17,7 @@ private val logger = KotlinLogging.logger { }
 
 @RestController
 class FileController(
-    private val documentService: FileService
+    private val fileService: FileService
 ) {
     @PostMapping
     fun uploadFile(
@@ -30,7 +30,7 @@ class FileController(
             val userId = dataBufferToString(map["userid"]!!.content())
 
             userId.flatMap {
-                documentService.uploadAndProcessFile(it, file.headers(), file.content().cache())
+                fileService.uploadAndProcessFile(it, file.headers(), file.content().cache())
             }
         }.onErrorMap { BadResponseStatus(it.message) }
     }
@@ -38,13 +38,13 @@ class FileController(
     @GetMapping
     fun list(
         @RequestParam(required = true) userId: String
-    ): Flux<FileData> = documentService.listFiles(userId)
+    ): Flux<FileData> = fileService.listFiles(userId)
 
     @GetMapping("/{fileId}")
     fun getContent(
         @RequestParam(required = true) userId: String,
         @PathVariable fileId: String
-    ): Flux<String> = documentService.getFileContent(userId, fileId)
+    ): Flux<DataBuffer> = fileService.getFileContent(userId, fileId)
 
     @DeleteMapping("/{fileId}")
     fun deleteFile(
@@ -53,7 +53,7 @@ class FileController(
         response: ServerHttpResponse
     ): Mono<Void> {
         logger.info { "Started removing file $fileId" }
-        return documentService.deleteFile(userId, fileId).flatMap {
+        return fileService.deleteFile(userId, fileId).flatMap {
             if (it) Mono.empty<Void>()
             else Mono.error(BadResponseStatus("Could not remove file $fileId"))
         }

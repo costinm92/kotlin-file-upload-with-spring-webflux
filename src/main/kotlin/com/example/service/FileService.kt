@@ -3,6 +3,7 @@ package com.example.service
 import com.example.model.FileData
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferUtils
+import org.springframework.core.io.buffer.DefaultDataBufferFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
@@ -35,9 +36,13 @@ class FileService {
         return parentFile.list()?.toFlux()?.map { FileData(it) } ?: Flux.empty()
     }
 
-    fun getFileContent(userId: String, fileId: String): Flux<String> {
+    fun getFileContent(userId: String, fileId: String): Flux<DataBuffer> {
         val filePath = File("test_files/$userId/$fileId").toPath()
-        return Flux.fromStream(Files.lines(filePath))
+        return DataBufferUtils.readInputStream(
+            { Files.newInputStream(filePath) },
+            DefaultDataBufferFactory(),
+            3
+        )
     }
 
     fun deleteFile(userId: String, fileId: String): Mono<Boolean> {
