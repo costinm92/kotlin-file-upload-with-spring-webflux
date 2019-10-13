@@ -28,7 +28,6 @@ class FileService {
             .map { DataBufferUtils.release(it) }
             .then(fileName.toMono())
             .map { FileData(it) }
-
     }
 
     fun listFiles(userId: String): Flux<FileData> {

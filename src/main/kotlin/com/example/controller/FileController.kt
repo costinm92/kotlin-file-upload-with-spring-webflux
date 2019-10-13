@@ -28,10 +28,7 @@ class FileController(
             val map = parts.toSingleValueMap()
             val file = map["file"]!!
             val userId = dataBufferToString(map["userid"]!!.content())
-
-            userId.flatMap {
-                fileService.uploadAndProcessFile(it, file.headers(), file.content().cache())
-            }
+            userId.flatMap { fileService.uploadAndProcessFile(it, file.headers(), file.content().cache()) }
         }.onErrorMap { BadResponseStatus(it.message) }
     }
 
