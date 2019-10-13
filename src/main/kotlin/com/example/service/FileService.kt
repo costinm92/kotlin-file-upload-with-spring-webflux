@@ -32,7 +32,7 @@ class FileService {
 
     fun listFiles(userId: String): Flux<FileData> {
         val parentFile = File("test_files/$userId")
-        return parentFile.list().toFlux().map { FileData(it) }
+        return parentFile.list()?.toFlux()?.map { FileData(it) } ?: Flux.empty()
     }
 
     fun getFileContent(userId: String, fileId: String): Flux<String> {
