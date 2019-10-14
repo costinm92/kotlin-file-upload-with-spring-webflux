@@ -102,4 +102,4 @@ The result is an application with 5 endpoints, that allow us to upload/download/
 
 ## References
 * [Web on Reactive Stack](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html)
-* [projectreactor.io Flux cacke() documentation](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#cache--)
+* [projectreactor.io Flux cache() documentation](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#cache--)
